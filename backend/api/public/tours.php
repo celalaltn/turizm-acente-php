@@ -5,8 +5,8 @@ header('Access-Control-Allow-Origin: *');
 require_once '../../db.php';
 
 $lang = $_GET['lang'] ?? 'TR';
-$startDate = $_GET['start_date'] ?? null;
-$endDate = $_GET['end_date'] ?? null;
+$startDate = $_GET['start'] ?? $_GET['start_date'] ?? null;
+$endDate = $_GET['end'] ?? $_GET['end_date'] ?? null;
 
 try {
     $sql = "SELECT t.id, t.price, t.quota, t.start_date, t.end_date, 
@@ -17,9 +17,13 @@ try {
     
     $params = [$lang];
 
-    if ($startDate && $endDate) {
-        $sql .= " AND t.start_date >= ? AND t.end_date <= ?";
+    if ($startDate) {
+        $sql .= " AND t.start_date >= ?";
         $params[] = $startDate;
+    }
+
+    if ($endDate) {
+        $sql .= " AND t.end_date <= ?";
         $params[] = $endDate;
     }
 

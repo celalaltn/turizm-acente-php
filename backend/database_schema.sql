@@ -126,8 +126,25 @@ CREATE TABLE `tour_translations` (
 -- --------------------------------------------------------
 
 --
+-- Tablo: `contacts`
+-- İletişim formundan gelen mesajları saklamak için
+--
+CREATE TABLE `contacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `status` enum('new','read','replied') DEFAULT 'new',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tablo: `tour_images`
--- Tur fotoğrafları (Bir tura maksimum 8 adet eklenebileceği formda belirtilmişti)
+-- Tur fotoğrafları
 --
 CREATE TABLE `tour_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -139,6 +156,24 @@ CREATE TABLE `tour_images` (
   KEY `tour_id` (`tour_id`),
   CONSTRAINT `fk_image_tour` FOREIGN KEY (`tour_id`) REFERENCES `tours` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Çevirileri zenginleştir
+INSERT INTO `translations` (`lang_code`, `translation_key`, `translation_value`) VALUES
+('TR', 'hero.title', 'Hayalinizdeki Tatile Çıkın'),
+('TR', 'hero.subtitle', 'En uygun fiyatlarla en güzel turları keşfedin'),
+('TR', 'search.start', 'Gidiş Tarihi'),
+('TR', 'search.end', 'Dönüş Tarihi'),
+('TR', 'search.button', 'Turları Ara'),
+('TR', 'home.about.title', 'Türkiye\'nin Tatil Başkenti Antalya\'da Unutulmaz Bir Deneyim'),
+('TR', 'home.about.desc', 'Türkiye\'nin en sevilen tatil rotası Antalya\'da, denizin, güneşin ve konforlu otellerin tadını Asr Holiday ile çıkarın...'),
+('EN', 'hero.title', 'Go on Your Dream Vacation'),
+('EN', 'hero.subtitle', 'Discover the most beautiful tours with the best prices'),
+('EN', 'search.start', 'Start Date'),
+('EN', 'search.end', 'End Date'),
+('EN', 'search.button', 'Search Tours'),
+('EN', 'home.about.title', 'An Unforgettable Experience in Antalya'),
+('EN', 'home.about.desc', 'Enjoy the sea, sun, and comfortable hotels in Antalya, Turkey\'s most popular holiday destination...');
+
 
 -- --------------------------------------------------------
 
