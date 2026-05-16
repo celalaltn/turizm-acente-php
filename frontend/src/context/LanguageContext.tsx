@@ -43,7 +43,13 @@ const defaultTranslations: Record<Language, Translations> = {
     "contact.error": "Mesaj gönderilirken bir hata oluştu.",
     "footer.text": "© 2026 Asr Holiday. Tüm hakları saklıdır.",
     "home.about.title": "Türkiye'nin Tatil Başkenti Antalya'da Unutulmaz Bir Deneyim",
-    "home.about.desc": "Türkiye'nin en sevilen tatil rotası Antalya'da, denizin, güneşin ve konforlu otellerin tadını Asr Holiday ile çıkarın. Travholtour Tourism Agency olarak, bölgedeki derin tecrübemizle size en kaliteli konaklama ve tur seçeneklerini sunuyoruz. İster lüks bir otel tatili, ister masmavi bir deniz turu arıyor olun; Antalya'nın her köşesinde hayalinizdeki tatili profesyonel ekibimizle planlıyoruz."
+    "home.about.desc": "Türkiye'nin en sevilen tatil rotası Antalya'da, denizin, güneşin ve konforlu otellerin tadını Asr Holiday ile çıkarın. Travholtour Tourism Agency olarak, bölgedeki derin tecrübemizle size en kaliteli konaklama ve tur seçeneklerini sunuyoruz. İster lüks bir otel tatili, ister masmavi bir deniz turu arıyor olun; Antalya'nın her köşesinde hayalinizdeki tatili profesyonel ekibimizle planlıyoruz.",
+    "legal.kvkk.title": "KVKK Aydınlatma Metni",
+    "legal.kvkk.text": "Kişisel verileriniz, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) uyarınca Asr Holiday tarafından veri sorumlusu sıfatıyla işlenmektedir. Verileriniz, sizlere daha iyi hizmet sunabilmek ve yasal yükümlülüklerimizi yerine getirmek amacıyla kullanılır.",
+    "legal.cookies.title": "Çerez Politikası",
+    "legal.cookies.text": "Sitemizde sizlere daha iyi bir deneyim sunabilmek adına çerezler kullanılmaktadır. Çerezler, web sitemizi ziyaret ettiğinizde cihazınıza kaydedilen küçük metin dosyalarıdır.",
+    "cookies.banner.text": "Size daha iyi bir deneyim sunabilmek için çerezleri kullanıyoruz.",
+    "cookies.banner.accept": "Kabul Et"
   },
   en: {
     "nav.home": "Home",
@@ -68,7 +74,13 @@ const defaultTranslations: Record<Language, Translations> = {
     "contact.error": "An error occurred while sending your message.",
     "footer.text": "© 2026 Asr Holiday. All rights reserved.",
     "home.about.title": "An Unforgettable Experience in Antalya, Turkey's Holiday Capital",
-    "home.about.desc": "Enjoy the sea, sun, and comfortable hotels in Antalya, Turkey's most popular holiday destination, with Asr Holiday. As Travholtour Tourism Agency, we offer you the highest quality accommodation and tour options with our deep experience in the region. Whether you are looking for a luxury hotel holiday or a deep blue sea tour; we plan your dream holiday in every corner of Antalya with our professional team."
+    "home.about.desc": "Enjoy the sea, sun, and comfortable hotels in Antalya, Turkey's most popular holiday destination, with Asr Holiday. As Travholtour Tourism Agency, we offer you the highest quality accommodation and tour options with our deep experience in the region. Whether you are looking for a luxury hotel holiday or a deep blue sea tour; we plan your dream holiday in every corner of Antalya with our professional team.",
+    "legal.kvkk.title": "KVKK Clarification Text",
+    "legal.kvkk.text": "Your personal data is processed by Asr Holiday as the data controller in accordance with the Law on the Protection of Personal Data No. 6698 (KVKK). Your data is used to provide you with better service and to fulfill our legal obligations.",
+    "legal.cookies.title": "Cookie Policy",
+    "legal.cookies.text": "Cookies are used on our site to provide you with a better experience. Cookies are small text files that are saved on your device when you visit our website.",
+    "cookies.banner.text": "We use cookies to provide you with a better experience.",
+    "cookies.banner.accept": "Accept"
   },
   ru: {
     "nav.home": "Главная",

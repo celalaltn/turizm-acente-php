@@ -1,15 +1,33 @@
-"use client";
-
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { MapPin, Phone, Mail, Camera, Globe, Share2, ShieldCheck, FileText, Cookie } from "lucide-react";
+import LegalModal from "./LegalModal";
 
 export default function Footer() {
   const { t } = useLanguage();
+  const [modalData, setModalData] = useState<{ open: boolean; title: string; content: string }>({
+    open: false,
+    title: "",
+    content: ""
+  });
+
+  const openModal = (key: 'kvkk' | 'cookies') => {
+    setModalData({
+      open: true,
+      title: t(`legal.${key}.title`),
+      content: t(`legal.${key}.text`)
+    });
+  };
 
   return (
     <footer style={{ background: 'var(--secondary-dark)', color: 'white', paddingTop: '80px', paddingBottom: '30px' }}>
+      <LegalModal 
+        isOpen={modalData.open} 
+        onClose={() => setModalData({ ...modalData, open: false })} 
+        title={modalData.title} 
+        content={modalData.content} 
+      />
       <div className="container">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '50px', marginBottom: '60px' }}>
           
@@ -39,9 +57,9 @@ export default function Footer() {
               <li><Link href="/hakkimizda" style={{ color: 'rgba(255,255,255,0.7)', transition: '0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'white'}>Hakkımızda</Link></li>
               <li><Link href="/turlar" style={{ color: 'rgba(255,255,255,0.7)' }}>Turlarımız</Link></li>
               <li><Link href="/iletisim" style={{ color: 'rgba(255,255,255,0.7)' }}>İletişim</Link></li>
-              <li><Link href="/kvkk" style={{ color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '8px' }}><ShieldCheck size={16} /> KVKK</Link></li>
-              <li><Link href="/gizlilik" style={{ color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '8px' }}><FileText size={16} /> Gizlilik Sözleşmesi</Link></li>
-              <li><Link href="/cerezler" style={{ color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '8px' }}><Cookie size={16} /> Çerez Politikası</Link></li>
+              <li><span onClick={() => openModal('kvkk')} style={{ color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: '0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'white'} onMouseOut={e => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}><ShieldCheck size={16} /> KVKK</span></li>
+              <li><span onClick={() => openModal('kvkk')} style={{ color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: '0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'white'} onMouseOut={e => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}><FileText size={16} /> Gizlilik Sözleşmesi</span></li>
+              <li><span onClick={() => openModal('cookies')} style={{ color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: '0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'white'} onMouseOut={e => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}><Cookie size={16} /> Çerez Politikası</span></li>
             </ul>
           </div>
 

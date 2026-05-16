@@ -4,6 +4,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import FloatingActions from "@/components/FloatingActions";
 import ScrollReveal from "@/components/ScrollReveal";
+import CookieConsent from "@/components/CookieConsent";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         <LanguageProvider>
           {children}
           <FloatingActions />
+          <CookieConsent />
         </LanguageProvider>
       </body>
     </html>
