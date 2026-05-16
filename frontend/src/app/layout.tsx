@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr">
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <ScrollReveal />
         <LanguageProvider>
           {children}

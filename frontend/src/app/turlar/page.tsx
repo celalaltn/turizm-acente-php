@@ -7,6 +7,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Calendar, Star, ArrowRight, Search as SearchIcon } from "lucide-react";
 
+import PageHeader from "@/components/PageHeader";
+
 function ToursListContent() {
   const { t, lang } = useLanguage();
   const searchParams = useSearchParams();
@@ -48,13 +50,10 @@ function ToursListContent() {
     <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh' }}>
       <Header />
       
-      {/* Page Header */}
-      <div style={{ background: 'var(--primary-color)', padding: '60px 0', color: 'white', textAlign: 'center' }}>
-        <div className="container">
-          <h1 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '15px' }}>Turlarımız</h1>
-          <p style={{ fontSize: '1.2rem', opacity: 0.9 }}>Hayallerinizdeki tatili bulmak için turlarımızı keşfedin.</p>
-        </div>
-      </div>
+      <PageHeader 
+        title={t("nav.tours")} 
+        image="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2000&auto=format&fit=crop" // Antalya/Boat style image
+      />
 
       <div className="container" style={{ padding: '40px 25px' }}>
         {/* Filter Bar */}

@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { useLanguage } from "@/context/LanguageContext";
 import { ShieldCheck, Target, Award, Users, Map, Heart } from "lucide-react";
 
+import PageHeader from "@/components/PageHeader";
+
 export default function About() {
   const { t } = useLanguage();
 
@@ -13,25 +15,10 @@ export default function About() {
     <div style={{ backgroundColor: '#ffffff' }}>
       <Header />
       
-      {/* Hero Section */}
-      <section style={{ 
-        height: '400px', 
-        backgroundImage: 'linear-gradient(rgba(31, 33, 84, 0.7), rgba(31, 33, 84, 0.7)), url(https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2000&auto=format&fit=crop)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        color: 'white'
-      }}>
-        <div className="container">
-          <h1 style={{ fontSize: '3.5rem', fontWeight: '900', marginBottom: '15px' }}>{t("nav.about")}</h1>
-          <p style={{ fontSize: '1.2rem', opacity: 0.9, maxWidth: '700px', margin: '0 auto' }}>
-            Dünyayı keşfetme tutkunuzu profesyonel tecrübemizle birleştiriyoruz.
-          </p>
-        </div>
-      </section>
+      <PageHeader 
+        title={t("nav.about")} 
+        image="https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2000&auto=format&fit=crop" 
+      />
 
       {/* Intro Section */}
       <section className="container" style={{ padding: '100px 25px' }}>

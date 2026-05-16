@@ -7,6 +7,8 @@ import ContactForm from "@/components/ContactForm";
 import { useLanguage } from "@/context/LanguageContext";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Camera } from "lucide-react";
 
+import PageHeader from "@/components/PageHeader";
+
 export default function Contact() {
   const { t } = useLanguage();
 
@@ -14,17 +16,10 @@ export default function Contact() {
     <div style={{ backgroundColor: '#ffffff' }}>
       <Header />
       
-      {/* Page Header - Pure Title */}
-      <section style={{ 
-        padding: '80px 0', 
-        background: 'var(--secondary-dark)', 
-        color: 'white', 
-        textAlign: 'center' 
-      }}>
-        <div className="container">
-          <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: 0 }}>Bize Ulaşın</h1>
-        </div>
-      </section>
+      <PageHeader 
+        title={t("nav.contact")} 
+        image="https://images.unsplash.com/photo-1542051841-891c6b84c6b1?q=80&w=2000&auto=format&fit=crop" 
+      />
 
       {/* Info Cards - Restored & Stylish */}
       <section className="container" style={{ marginTop: '-40px', position: 'relative', zIndex: 10, paddingBottom: '80px' }}>
