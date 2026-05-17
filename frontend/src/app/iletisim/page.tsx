@@ -22,21 +22,21 @@ export default function Contact() {
       />
 
       {/* Info Cards - Restored & Stylish */}
-      <section className="container" style={{ marginTop: '-40px', position: 'relative', zIndex: 10, paddingBottom: '80px' }}>
+      <section className="container" style={{ marginTop: 'var(--card-margin-negative, -40px)', position: 'relative', zIndex: 10, paddingBottom: 'var(--box-padding, 80px)' }}>
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(var(--grid-col-min-small, 280px), 1fr))', 
           gap: '25px' 
         }}>
           {/* Address Card */}
-          <div className="contact-card">
+          <div className="contact-card" style={{ padding: 'var(--box-padding-medium, 40px)' }}>
             <div className="icon-wrapper" style={{ color: '#E56640', background: 'rgba(229, 102, 64, 0.1)' }}><MapPin size={30} /></div>
             <h3>Adresimiz</h3>
             <p>Güzeloba Mah. Havaalanı Cad. Batu Can İş Merkezi No:67/103 Muratpaşa/Antalya</p>
           </div>
 
           {/* Phone Card */}
-          <div className="contact-card">
+          <div className="contact-card" style={{ padding: 'var(--box-padding-medium, 40px)' }}>
             <div className="icon-wrapper" style={{ color: '#1F2154', background: 'rgba(31, 33, 84, 0.1)' }}><Phone size={30} /></div>
             <h3>Telefon</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -46,7 +46,7 @@ export default function Contact() {
           </div>
 
           {/* Email Card */}
-          <div className="contact-card">
+          <div className="contact-card" style={{ padding: 'var(--box-padding-medium, 40px)' }}>
             <div className="icon-wrapper" style={{ color: '#E56640', background: 'rgba(229, 102, 64, 0.1)' }}><Mail size={30} /></div>
             <h3>E-Posta</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -56,7 +56,7 @@ export default function Contact() {
           </div>
 
           {/* Working Hours Card */}
-          <div className="contact-card">
+          <div className="contact-card" style={{ padding: 'var(--box-padding-medium, 40px)' }}>
             <div className="icon-wrapper" style={{ color: '#1F2154', background: 'rgba(31, 33, 84, 0.1)' }}><Clock size={30} /></div>
             <h3>Çalışma Saatleri</h3>
             <p>Pazartesi - Cumartesi <br/> <strong>09:00 - 18:00</strong></p>
@@ -65,15 +65,16 @@ export default function Contact() {
       </section>
 
       {/* Main Contact Section */}
-      <section style={{ background: '#f8fafc', padding: '100px 0' }}>
+      <section style={{ background: '#f8fafc', padding: 'var(--section-padding, 100px 0)' }}>
         <div className="container">
-           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '60px' }}>
+           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(var(--grid-col-min-large, 400px), 1fr))', gap: 'var(--box-padding, 60px)' }}>
               {/* Left Side: Map & Direct Actions */}
               <div>
-                 <h2 style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '30px' }}>Konumumuz</h2>
+                 <h2 style={{ fontSize: 'var(--section-title-size, 2.5rem)', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '30px' }}>Konumumuz</h2>
                  <div style={{ 
                    width: '100%', 
-                   height: '400px', 
+                   height: 'var(--hero-height, 400px)', 
+                   minHeight: '300px',
                    background: '#e2e8f0', 
                    borderRadius: '30px', 
                    overflow: 'hidden',
@@ -93,7 +94,7 @@ export default function Contact() {
 
               {/* Right Side: Simplified Form */}
               <div>
-                 <h2 style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '30px' }}>Mesaj Gönderin</h2>
+                 <h2 style={{ fontSize: 'var(--section-title-size, 2.5rem)', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '30px' }}>Mesaj Gönderin</h2>
                  <div style={{ background: 'white', padding: '10px', borderRadius: '35px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
                     <ContactForm showInfoSide={false} />
                  </div>

@@ -58,7 +58,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Slider */}
-      <section className="hero-slider" style={{ position: 'relative', height: '85vh', minHeight: '600px', overflow: 'hidden' }}>
+      <section className="hero-slider" style={{ position: 'relative', height: 'var(--hero-height, 85vh)', minHeight: 'var(--hero-height, 600px)', overflow: 'hidden' }}>
         {SLIDER_IMAGES.map((img, idx) => (
           <div 
             key={idx}
@@ -78,19 +78,19 @@ export default function Home() {
           />
         ))}
 
-        <div className="container" style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div className="hero-content reveal reveal-up active" style={{ maxWidth: '900px', color: 'white', textAlign: 'center' }}>
-            <h1 style={{ fontSize: '4.5rem', fontWeight: '900', marginBottom: '20px', letterSpacing: '-2px', lineHeight: '1.1' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--box-padding, 20px)' }}>
+          <div className="hero-content reveal reveal-up active" style={{ maxWidth: '900px', color: 'white', textAlign: 'center', width: '100%' }}>
+            <h1 style={{ fontSize: 'var(--hero-title-size, 4.5rem)', fontWeight: '900', marginBottom: '20px', letterSpacing: '-2px', lineHeight: '1.1' }}>
               {t("hero.title")}
             </h1>
-            <p style={{ fontSize: '1.4rem', marginBottom: '40px', opacity: 0.9, fontWeight: '400' }}>
+            <p style={{ fontSize: 'var(--hero-subtitle-size, 1.4rem)', marginBottom: '40px', opacity: 0.9, fontWeight: '400' }}>
               {t("hero.subtitle")}
             </p>
             
             <div className="search-container" style={{ 
               background: 'white', 
-              padding: '12px', 
-              borderRadius: '24px', 
+              padding: 'var(--search-container-padding, 12px)', 
+              borderRadius: 'var(--search-container-radius, 24px)', 
               display: 'flex', 
               flexWrap: 'wrap',
               gap: '12px',
@@ -99,7 +99,7 @@ export default function Home() {
               margin: '0 auto',
               width: '100%'
             }}>
-              <div style={{ position: 'relative', flex: '1', minWidth: '220px' }}>
+              <div style={{ position: 'relative', flex: '1', minWidth: 'var(--search-input-min-width, 220px)' }}>
                 <Calendar size={18} style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', zIndex: 5 }} />
                 <DatePicker
                   selected={startDate}
@@ -116,7 +116,7 @@ export default function Home() {
                   dropdownMode="select"
                 />
               </div>
-              <div style={{ position: 'relative', flex: '1', minWidth: '220px' }}>
+              <div style={{ position: 'relative', flex: '1', minWidth: 'var(--search-input-min-width, 220px)' }}>
                 <Calendar size={18} style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', zIndex: 5 }} />
                 <DatePicker
                   selected={endDate}
@@ -134,7 +134,7 @@ export default function Home() {
                   dropdownMode="select"
                 />
               </div>
-              <button className="btn" onClick={handleSearch} style={{ minWidth: '160px', borderRadius: '16px' }}>
+              <button className="btn" onClick={handleSearch} style={{ minWidth: '160px', borderRadius: '16px', width: 'var(--search-button-width, auto)' }}>
                 {t("search.button") || "Turları Ara"}
               </button>
             </div>
@@ -143,13 +143,13 @@ export default function Home() {
       </section>
 
       {/* Featured Tours */}
-      <section className="tours container" style={{ padding: '100px 25px' }}>
+      <section className="tours container" style={{ padding: 'var(--section-padding, 100px 25px)' }}>
         <div className="reveal reveal-up" style={{ textAlign: 'center', marginBottom: '60px' }}>
           <h2 className="section-title" style={{ marginBottom: '15px' }}>{t("tours.title")}</h2>
-          <p style={{ color: '#64748b', fontSize: '1.2rem' }}>En çok tercih edilen rüya gibi tatil rotaları.</p>
+          <p style={{ color: '#64748b', fontSize: 'var(--section-subtitle-size, 1.2rem)' }}>En çok tercih edilen rüya gibi tatil rotaları.</p>
         </div>
 
-        <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '30px' }}>
+        <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(var(--grid-col-min-medium, 350px), 1fr))', gap: '30px' }}>
           {tours.map((tour: any, idx: number) => (
             <div key={tour.id} className={`tour-card reveal reveal-up delay-${(idx % 3) + 1}`} style={{ background: '#fff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
               <div 
@@ -192,8 +192,8 @@ export default function Home() {
       </section>
 
       {/* Trust Badges / Stats */}
-      <section style={{ padding: '80px 0', background: '#f8fafc' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', textAlign: 'center' }}>
+      <section style={{ padding: 'var(--section-padding, 80px 0)', background: '#f8fafc' }}>
+        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '30px', textAlign: 'center' }}>
           <div className="reveal reveal-up delay-1">
             <h4 style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--primary-color)' }}>10k+</h4>
             <p style={{ color: '#64748b', fontWeight: '600' }}>Mutlu Müşteri</p>
@@ -214,7 +214,7 @@ export default function Home() {
       </section>
 
       {/* Reviews Slider */}
-      <section className="reviews container reveal reveal-up" style={{ padding: '100px 25px', overflow: 'hidden' }}>
+      <section className="reviews container reveal reveal-up" style={{ padding: 'var(--section-padding, 100px 25px)', overflow: 'hidden' }}>
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <h2 className="section-title">Müşterilerimiz Ne Diyor?</h2>
           <p style={{ color: '#64748b' }}>Binlerce mutlu gezginin deneyimlerine kulak verin.</p>
@@ -228,10 +228,10 @@ export default function Home() {
       </div>
 
       {/* Home Short About Section (SEO) */}
-      <section className="reveal reveal-up" style={{ padding: '100px 25px', background: '#ffffff' }}>
+      <section className="reveal reveal-up" style={{ padding: 'var(--section-padding, 100px 25px)', background: '#ffffff' }}>
         <div className="container" style={{ maxWidth: '900px', textAlign: 'center' }}>
           <h2 style={{ 
-            fontSize: '2.8rem', 
+            fontSize: 'var(--section-title-size, 2.8rem)', 
             fontWeight: '900', 
             color: 'var(--secondary-dark)', 
             marginBottom: '30px',

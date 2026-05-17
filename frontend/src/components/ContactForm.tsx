@@ -36,15 +36,15 @@ export default function ContactForm({ showInfoSide = true }: { showInfoSide?: bo
   };
 
   return (
-    <section className="contact-section" style={{ padding: showInfoSide ? '100px 25px' : '0', background: showInfoSide ? 'var(--background-color)' : 'transparent' }}>
+    <section className="contact-section" style={{ padding: showInfoSide ? 'var(--section-padding, 100px 25px)' : '0', background: showInfoSide ? 'var(--background-color)' : 'transparent' }}>
       <div className="container" style={{ maxWidth: showInfoSide ? '1100px' : '600px', padding: 0 }}>
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: showInfoSide ? 'repeat(auto-fit, minmax(400px, 1fr))' : '1fr', 
-          gap: '60px',
+          gridTemplateColumns: showInfoSide ? 'repeat(auto-fit, minmax(var(--grid-col-min-large, 400px), 1fr))' : '1fr', 
+          gap: 'var(--box-padding, 60px)',
           alignItems: 'center',
           background: 'white',
-          padding: showInfoSide ? '60px' : '40px',
+          padding: showInfoSide ? 'var(--box-padding, 60px)' : 'var(--box-padding-medium, 40px)',
           borderRadius: '40px',
           boxShadow: showInfoSide ? '0 30px 60px rgba(0,0,0,0.05)' : 'none',
           border: showInfoSide ? '1px solid #f1f5f9' : 'none'
@@ -55,7 +55,7 @@ export default function ContactForm({ showInfoSide = true }: { showInfoSide?: bo
               <span style={{ color: 'var(--primary-color)', fontWeight: '800', letterSpacing: '2px', fontSize: '0.9rem', textTransform: 'uppercase', marginBottom: '15px', display: 'block' }}>
                 İletişime Geçin
               </span>
-              <h2 style={{ fontSize: '3rem', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '25px', lineHeight: '1.1' }}>
+              <h2 style={{ fontSize: 'var(--section-title-size, 3rem)', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '25px', lineHeight: '1.1' }}>
                 Sorularınız mı var? <br/> <span style={{ color: 'var(--primary-color)' }}>Biz Buradayız.</span>
               </h2>
               <p style={{ color: '#64748b', fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '40px' }}>

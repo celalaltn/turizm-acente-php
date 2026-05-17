@@ -55,11 +55,11 @@ function ToursListContent() {
         image="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2000&auto=format&fit=crop" // Antalya/Boat style image
       />
 
-      <div className="container" style={{ padding: '40px 25px' }}>
+      <div className="container" style={{ padding: 'var(--section-padding, 40px 25px)' }}>
         {/* Filter Bar */}
-        <div style={{ 
+        <div className="filter-bar" style={{ 
           background: 'white', 
-          padding: '25px', 
+          padding: 'var(--box-padding-medium, 25px)', 
           borderRadius: '24px', 
           boxShadow: '0 10px 30px rgba(0,0,0,0.05)', 
           marginBottom: '50px',
@@ -68,7 +68,7 @@ function ToursListContent() {
           gap: '20px',
           alignItems: 'flex-end'
         }}>
-          <div style={{ flex: 1, minWidth: '200px' }}>
+          <div style={{ flex: 1, minWidth: 'var(--grid-col-min-small, 200px)' }}>
             <label style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#64748b', fontSize: '0.9rem' }}>Başlangıç Tarihi</label>
             <div style={{ position: 'relative' }}>
               <Calendar size={18} style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
@@ -80,7 +80,7 @@ function ToursListContent() {
               />
             </div>
           </div>
-          <div style={{ flex: 1, minWidth: '200px' }}>
+          <div style={{ flex: 1, minWidth: 'var(--grid-col-min-small, 200px)' }}>
             <label style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#64748b', fontSize: '0.9rem' }}>Bitiş Tarihi</label>
             <div style={{ position: 'relative' }}>
               <Calendar size={18} style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
@@ -92,7 +92,7 @@ function ToursListContent() {
               />
             </div>
           </div>
-          <button className="btn" onClick={handleFilter} style={{ padding: '12px 30px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button className="btn" onClick={handleFilter} style={{ padding: '12px 30px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', width: 'var(--btn-width, auto)' }}>
             <SearchIcon size={20} /> Filtrele
           </button>
         </div>
@@ -103,7 +103,7 @@ function ToursListContent() {
             <div className="loader">Yükleniyor...</div>
           </div>
         ) : (
-          <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '30px' }}>
+          <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(var(--grid-col-min-medium, 350px), 1fr))', gap: '30px' }}>
             {tours.length > 0 ? (
               tours.map((tour) => (
                 <div key={tour.id} className="tour-card" style={{ background: '#fff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>

@@ -447,6 +447,43 @@ ul { list-style: none; }
 }
 
 /* Premium Reveal Animations */
+/* Premium Responsive Design System Variables */
+:root {
+  --primary-color: #E56640;
+  --primary-dark: #c95533;
+  --secondary-dark: #1F2154;
+  --primary-gradient: linear-gradient(135deg, #E56640 0%, #c95533 100%);
+  --navy-gradient: linear-gradient(135deg, #1F2154 0%, #16183d 100%);
+  --accent-color: #0f172a;
+  --text-color: #1e293b;
+  --text-light: #64748b;
+  --background-color: #f8fafc;
+  --white: #ffffff;
+  --border-radius: 20px;
+  --box-shadow: 0 10px 30px rgba(31, 33, 84, 0.08);
+  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Typography & Spacing defaults for Desktop */
+  --hero-title-size: 4.5rem;
+  --hero-subtitle-size: 1.4rem;
+  --section-title-size: 3rem;
+  --section-subtitle-size: 1.2rem;
+  --section-padding: 100px 25px;
+  --section-padding-large: 120px 0 80px;
+  --grid-col-min-large: 400px;
+  --grid-col-min-medium: 350px;
+  --grid-col-min-small: 300px;
+  --box-padding: 60px;
+  --box-padding-medium: 40px;
+  --card-margin-negative: -40px;
+  --hero-height: 85vh;
+  --logo-height: 45px;
+  --search-input-min-width: 220px;
+  --search-button-width: auto;
+  --search-container-padding: 12px;
+  --search-container-radius: 24px;
+}
+
 .reveal {
   opacity: 0;
   transition: all 1.2s cubic-bezier(0.2, 1, 0.3, 1);
@@ -467,16 +504,40 @@ ul { list-style: none; }
 .delay-3 { transition-delay: 0.6s; }
 .delay-4 { transition-delay: 0.8s; }
 
-/* Responsive */
+/* Responsive System Overrides */
 @media (max-width: 768px) {
-  .search-bar {
-    flex-direction: column;
+  :root {
+    --hero-title-size: 2.3rem;
+    --hero-subtitle-size: 1.1rem;
+    --section-title-size: 2rem;
+    --section-subtitle-size: 1rem;
+    --section-padding: 50px 15px;
+    --section-padding-large: 60px 0 40px;
+    --grid-col-min-large: 1fr;
+    --grid-col-min-medium: 1fr;
+    --grid-col-min-small: 1fr;
+    --box-padding: 20px;
+    --box-padding-medium: 20px;
+    --card-margin-negative: -20px;
+    --hero-height: 80vh;
+    --logo-height: 32px;
+    --search-input-min-width: 100%;
+    --search-button-width: 100%;
+    --search-container-padding: 20px;
+    --search-container-radius: 18px;
   }
-  .hero-content h1 {
-    font-size: 2.5rem;
+
+  .container {
+    padding: 0 15px !important;
   }
-  .header-content {
-    flex-direction: column;
-    gap: 1rem;
+
+  /* Fix section title default margin for mobile */
+  .section-title {
+    font-size: var(--section-title-size) !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  .experience-badge {
+    display: none !important;
   }
 }

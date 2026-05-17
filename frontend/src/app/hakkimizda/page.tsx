@@ -21,13 +21,13 @@ export default function About() {
       />
 
       {/* Intro Section */}
-      <section className="container" style={{ padding: '100px 25px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
+      <section className="container" style={{ padding: 'var(--section-padding, 100px 25px)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(var(--grid-col-min-medium, 350px), 1fr))', gap: 'var(--box-padding, 80px)', alignItems: 'center' }}>
           <div>
             <span style={{ color: 'var(--primary-color)', fontWeight: '800', letterSpacing: '2px', fontSize: '0.9rem', textTransform: 'uppercase', marginBottom: '15px', display: 'block' }}>
               Hikayemiz
             </span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '25px', lineHeight: '1.2' }}>
+            <h2 style={{ fontSize: 'var(--section-title-size, 2.5rem)', fontWeight: '900', color: 'var(--secondary-dark)', marginBottom: '25px', lineHeight: '1.2' }}>
               ASR Holiday & Travholtour <br/> <span style={{ color: 'var(--primary-color)' }}>Turizm Acentası</span>
             </h2>
             <div style={{ fontSize: '1.1rem', color: '#64748b', lineHeight: '1.8' }}>
@@ -46,17 +46,16 @@ export default function About() {
                alt="About Us" 
                style={{ width: '100%', borderRadius: '30px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
              />
-             <div style={{ 
+             <div className="experience-badge" style={{ 
                position: 'absolute', 
-               bottom: '-30px', 
-               right: '-30px', 
+               bottom: 'var(--card-margin-negative, -30px)', 
+               right: 'var(--card-margin-negative, -30px)', 
                background: 'var(--primary-gradient)', 
-               padding: '30px', 
+               padding: 'var(--box-padding, 30px)', 
                borderRadius: '24px', 
                color: 'white',
                boxShadow: '0 10px 30px rgba(229, 102, 64, 0.3)',
-               textAlign: 'center',
-               display: 'none' // Hidden on smaller screens via responsive logic normally
+               textAlign: 'center'
              }}>
                <div style={{ fontSize: '2.5rem', fontWeight: '900' }}>15+</div>
                <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>Yıllık Deneyim</div>
@@ -66,18 +65,18 @@ export default function About() {
       </section>
 
       {/* Values Section */}
-      <section style={{ background: '#f8fafc', padding: '100px 0' }}>
+      <section style={{ background: '#f8fafc', padding: 'var(--section-padding, 100px 0)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 className="section-title">Temel Değerlerimiz</h2>
             <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>Müşterilerimize sunduğumuz hizmetin kalitesini bu ilkeler üzerine inşa ediyoruz.</p>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(var(--grid-col-min-small, 300px), 1fr))', gap: '30px' }}>
             <ValueCard 
               icon={<ShieldCheck size={32} />} 
               title="Güvenilirlik" 
-              desc="Tüm süreçlerimizde şeffaflık ve dürüstlükle hareket eder, misafirlerimizin güvenini her şeyin üzerinde tutarız."
+              desc="Tüm süreçlerimizde şeffaflık ve dürüstlükle hareket eder, misafirlerimizin güvenini her şeyin güveninde tutarız."
             />
             <ValueCard 
               icon={<Target size={32} />} 
@@ -94,8 +93,8 @@ export default function About() {
       </section>
 
       {/* Stats Section */}
-      <section className="container" style={{ padding: '100px 25px', textAlign: 'center' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '50px' }}>
+      <section className="container" style={{ padding: 'var(--section-padding, 100px 25px)', textAlign: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '40px' }}>
            <StatItem icon={<Users />} count="10k+" label="Mutlu Misafir" />
            <StatItem icon={<Map />} count="500+" label="Tur Rotası" />
            <StatItem icon={<Heart />} count="100%" label="Müşteri Memnuniyeti" />
@@ -131,7 +130,7 @@ function StatItem({ icon, count, label }: { icon: React.ReactNode, count: string
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
       <div style={{ color: 'var(--primary-color)' }}>
-        {React.cloneElement(icon as React.ReactElement, { size: 40 })}
+        {React.cloneElement(icon as React.ReactElement<any>, { size: 40 })}
       </div>
       <div>
         <div style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--secondary-dark)' }}>{count}</div>

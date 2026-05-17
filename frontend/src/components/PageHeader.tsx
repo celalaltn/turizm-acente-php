@@ -19,7 +19,7 @@ export default function PageHeader({
     <section 
       style={{ 
         position: 'relative', 
-        padding: '120px 0 80px', 
+        padding: 'var(--section-padding-large, 120px 0 80px)', 
         backgroundImage: `linear-gradient(rgba(31, 33, 84, 0.7), rgba(31, 33, 84, 0.8)), url(${image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -28,7 +28,7 @@ export default function PageHeader({
       }}
     >
       <div className="container">
-        <h1 style={{ fontSize: '3.5rem', fontWeight: '900', marginBottom: '20px', letterSpacing: '-1px' }}>
+        <h1 style={{ fontSize: 'var(--hero-title-size, 3.5rem)', fontWeight: '900', marginBottom: '20px', letterSpacing: '-1px' }}>
           {title}
         </h1>
         
