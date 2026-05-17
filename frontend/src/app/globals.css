@@ -22,12 +22,15 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
   font-family: 'Outfit', sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* RTL Support */

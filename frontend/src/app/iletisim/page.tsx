@@ -125,7 +125,7 @@ export default function Contact() {
           border-radius: 20px;
           display: flex;
           align-items: center;
-          justifyContent: center;
+          justify-content: center;
           margin: 0 auto 25px;
         }
         .contact-card h3 {
@@ -153,7 +153,7 @@ export default function Contact() {
           flex: 1;
           display: flex;
           align-items: center;
-          justifyContent: center;
+          justify-content: center;
           gap: 10px;
           padding: 20px;
           color: white;
