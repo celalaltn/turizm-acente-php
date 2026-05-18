@@ -77,7 +77,7 @@ export default function SettingsAdmin() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+      <div className="responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '10px' }}>Genel Ayarlar</h1>
           <p style={{ color: '#94a3b8' }}>Site kimliğini ve iletişim kanallarını buradan yönetin.</p>
@@ -102,7 +102,7 @@ export default function SettingsAdmin() {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>
+      <div className="responsive-settings-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>
         {/* Logo Section */}
         <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', padding: '30px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '25px' }}>
@@ -198,6 +198,28 @@ export default function SettingsAdmin() {
           />
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .responsive-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 20px !important;
+            margin-bottom: 25px !important;
+          }
+          .responsive-header button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .responsive-settings-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .responsive-settings-grid > div {
+            padding: 20px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

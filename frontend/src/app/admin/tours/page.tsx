@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { fetchApi } from "@/lib/api";
-import { Plus, Trash2, Calendar, Users, DollarSign, Image as ImageIcon, ArrowLeft, Save, Map as MapIcon } from "lucide-react";
+import { fetchApi, BACKEND_BASE_URL } from "@/lib/api";
+import { Plus, Trash2, Calendar, Users, DollarSign, Image as ImageIcon, ArrowLeft, Save, Map as MapIcon, Edit } from "lucide-react";
 
 export default function ToursAdmin() {
   const [activeTab, setActiveTab] = useState("list");
   const [tours, setTours] = useState<any[]>([]);
   const [newTour, setNewTour] = useState({ title: "", description: "", price: "", quota: "", start_date: "", end_date: "", special_conditions: "", lang_code: "TR" });
-  const [images, setImages] = useState<FileList | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<{ id: string; file: File; preview: string }[]>([]);
+  const [editingTourId, setEditingTourId] = useState<number | null>(null);
+  const [existingImages, setExistingImages] = useState<{ id: number; image_path: string }[]>([]);
 
   useEffect(() => {
     loadTours();
@@ -25,18 +27,42 @@ export default function ToursAdmin() {
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      const newSelected = filesArray.map(file => ({
+        id: Math.random().toString(36).substring(2, 9),
+        file,
+        preview: URL.createObjectURL(file)
+      }));
+      setSelectedFiles(prev => [...prev, ...newSelected]);
+    }
+  };
+
+  const handleRemoveImage = (id: string, previewUrl: string) => {
+    setSelectedFiles(prev => prev.filter(item => item.id !== id));
+    URL.revokeObjectURL(previewUrl);
+  };
+
   const handleSaveTour = async () => {
     try {
+      const isEdit = editingTourId !== null;
+      const payload = isEdit 
+        ? { id: editingTourId, ...newTour } 
+        : newTour;
+
       const res = await fetchApi("/tours.php", {
-        method: "POST",
-        body: JSON.stringify(newTour)
+        method: isEdit ? "PUT" : "POST",
+        body: JSON.stringify(payload)
       });
       
       if (res.status === "success") {
-        if (images && images.length > 0) {
+        const activeTourId = isEdit ? editingTourId : res.tour_id;
+        
+        if (selectedFiles.length > 0) {
           const formData = new FormData();
-          formData.append("tour_id", res.tour_id);
-          Array.from(images).forEach(file => formData.append("images[]", file));
+          formData.append("tour_id", String(activeTourId));
+          selectedFiles.forEach(item => formData.append("images[]", item.file));
           
           await fetchApi("/upload_image.php", {
             method: "POST",
@@ -44,16 +70,63 @@ export default function ToursAdmin() {
           });
         }
         
-        alert("Tur başarıyla eklendi.");
+        alert(isEdit ? "Tur başarıyla güncellendi." : "Tur başarıyla eklendi.");
+        
+        // Revoke all preview URLs
+        selectedFiles.forEach(item => URL.revokeObjectURL(item.preview));
+        setSelectedFiles([]);
+        setExistingImages([]);
+        setEditingTourId(null);
+        
         setActiveTab("list");
         loadTours();
         setNewTour({ title: "", description: "", price: "", quota: "", start_date: "", end_date: "", special_conditions: "", lang_code: "TR" });
-        setImages(null);
       } else {
         alert(res.message);
       }
     } catch (e) {
       alert("Hata oluştu.");
+    }
+  };
+
+  const startEditTour = async (id: number) => {
+    try {
+      const res = await fetchApi(`/tours.php?id=${id}`);
+      if (res.status === "success") {
+        const tour = res.data;
+        setNewTour({
+          title: tour.title || "",
+          description: tour.description || "",
+          price: tour.price || "",
+          quota: tour.quota || "",
+          start_date: tour.start_date || "",
+          end_date: tour.end_date || "",
+          special_conditions: tour.special_conditions || "",
+          lang_code: "TR"
+        });
+        setExistingImages(tour.images || []);
+        setEditingTourId(id);
+        setActiveTab("add");
+      } else {
+        alert(res.message);
+      }
+    } catch (e) {
+      alert("Hata oluştu.");
+    }
+  };
+
+  const handleDeleteExistingImage = async (imageId: number) => {
+    if (confirm("Bu fotoğrafı kalıcı olarak silmek istediğinize emin misiniz?")) {
+      try {
+        const res = await fetchApi(`/upload_image.php?id=${imageId}`, { method: "DELETE" });
+        if (res.status === "success") {
+          setExistingImages(prev => prev.filter(img => img.id !== imageId));
+        } else {
+          alert(res.message);
+        }
+      } catch (e) {
+        alert("Hata oluştu.");
+      }
     }
   };
 
@@ -70,13 +143,23 @@ export default function ToursAdmin() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+      <div className="responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '10px' }}>Tur Yönetimi</h1>
           <p style={{ color: '#94a3b8' }}>Sistemdeki tüm turları buradan yönetebilir ve yeni turlar ekleyebilirsiniz.</p>
         </div>
         <button 
-          onClick={() => setActiveTab(activeTab === "list" ? "add" : "list")}
+          onClick={() => {
+            if (activeTab === "add") {
+              // Revoke urls and clear selected files when returning to list
+              selectedFiles.forEach(item => URL.revokeObjectURL(item.preview));
+              setSelectedFiles([]);
+              setExistingImages([]);
+              setEditingTourId(null);
+              setNewTour({ title: "", description: "", price: "", quota: "", start_date: "", end_date: "", special_conditions: "", lang_code: "TR" });
+            }
+            setActiveTab(activeTab === "list" ? "add" : "list");
+          }}
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -98,7 +181,7 @@ export default function ToursAdmin() {
       {activeTab === "list" ? (
         <div style={{ display: 'grid', gap: '20px' }}>
           {tours.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
+            <div className="responsive-table" style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
                 <thead>
                   <tr style={{ textAlign: 'left', color: '#64748b', fontSize: '0.9rem' }}>
@@ -129,12 +212,20 @@ export default function ToursAdmin() {
                         </div>
                       </td>
                       <td style={{ padding: '20px', borderRadius: '0 15px 15px 0', border: '1px solid rgba(255,255,255,0.05)', borderLeft: 'none', textAlign: 'right' }}>
-                        <button 
-                          onClick={() => deleteTour(t.id)} 
-                          style={{ padding: '10px', color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', border: 'none', borderRadius: '10px', cursor: 'pointer' }}
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                          <button 
+                            onClick={() => startEditTour(t.id)} 
+                            style={{ padding: '10px', color: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)', border: 'none', borderRadius: '10px', cursor: 'pointer' }}
+                          >
+                            <Edit size={18} />
+                          </button>
+                          <button 
+                            onClick={() => deleteTour(t.id)} 
+                            style={{ padding: '10px', color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', border: 'none', borderRadius: '10px', cursor: 'pointer' }}
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -150,7 +241,7 @@ export default function ToursAdmin() {
         </div>
       ) : (
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
+          <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
             <div style={{ gridColumn: '1 / -1' }}>
               <label style={{ display: 'block', marginBottom: '10px', color: '#94a3b8' }}>Tur Başlığı (Varsayılan - TR)</label>
               <input 
@@ -279,13 +370,132 @@ export default function ToursAdmin() {
                   id="imageInput"
                   multiple 
                   accept="image/*" 
-                  onChange={e => setImages(e.target.files)}
+                  onChange={handleImageChange}
                   style={{ display: 'none' }}
                 />
                 <div style={{ display: 'inline-flex', padding: '10px 20px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', fontSize: '0.9rem' }}>
-                  {images ? `${images.length} dosya seçildi` : "Dosya Seçilmedi"}
+                  {selectedFiles.length > 0 ? `${selectedFiles.length} dosya seçildi` : "Dosya Seçilmedi"}
                 </div>
+                
+                {selectedFiles.length > 0 && (
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', 
+                    gap: '12px', 
+                    marginTop: '25px',
+                    padding: '15px',
+                    background: 'rgba(255,255,255,0.02)',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  >
+                    {selectedFiles.map((item) => (
+                      <div 
+                        key={item.id} 
+                        style={{ 
+                          position: 'relative', 
+                          aspectRatio: '1', 
+                          borderRadius: '12px', 
+                          overflow: 'hidden',
+                          border: '2px solid rgba(255,255,255,0.1)',
+                          boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                        }}
+                      >
+                        <img 
+                          src={item.preview} 
+                          alt="Önizleme" 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveImage(item.id, item.preview);
+                          }}
+                          style={{
+                            position: 'absolute',
+                            top: '5px',
+                            right: '5px',
+                            background: '#ef4444',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '24px',
+                            height: '24px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+                            transition: 'transform 0.2s'
+                          }}
+                          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'}
+                          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
              </div>
+
+             {existingImages.length > 0 && (
+               <div style={{ marginTop: '25px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)' }} onClick={e => e.stopPropagation()}>
+                 <h5 style={{ fontSize: '1rem', color: '#94a3b8', marginBottom: '15px', fontWeight: '600', textAlign: 'left' }}>Mevcut Yüklü Fotoğraflar ({existingImages.length}/8)</h5>
+                 <div style={{ 
+                   display: 'grid', 
+                   gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', 
+                   gap: '12px'
+                 }}>
+                   {existingImages.map((img) => (
+                     <div 
+                       key={img.id} 
+                       style={{ 
+                         position: 'relative', 
+                         aspectRatio: '1', 
+                         borderRadius: '12px', 
+                         overflow: 'hidden',
+                         border: '2px solid rgba(255,255,255,0.1)',
+                         boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                       }}
+                     >
+                       <img 
+                         src={`${BACKEND_BASE_URL}/${img.image_path}`} 
+                         alt="Mevcut Resim" 
+                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                       />
+                       <button
+                         type="button"
+                         onClick={() => handleDeleteExistingImage(img.id)}
+                         style={{
+                           position: 'absolute',
+                           top: '5px',
+                           right: '5px',
+                           background: '#ef4444',
+                           color: 'white',
+                           border: 'none',
+                           borderRadius: '50%',
+                           width: '24px',
+                           height: '24px',
+                           display: 'flex',
+                           alignItems: 'center',
+                           justifyContent: 'center',
+                           cursor: 'pointer',
+                           boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+                           transition: 'transform 0.2s'
+                         }}
+                         onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'}
+                         onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+                       >
+                         <Trash2 size={12} />
+                       </button>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
           </div>
           </div>
 
@@ -312,10 +522,71 @@ export default function ToursAdmin() {
             onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
           >
             <Save size={24} />
-            YENI TURU KAYDET
+            {editingTourId !== null ? "DEĞİŞİKLİKLERİ KAYDET" : "YENI TURU KAYDET"}
           </button>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .responsive-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 20px !important;
+            margin-bottom: 25px !important;
+          }
+          .responsive-header button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .responsive-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .responsive-grid > div {
+            grid-column: 1 / -1 !important;
+          }
+          /* Grid inside form for date and price inputs */
+          div[style*="gridTemplateColumns: '1fr 1fr'"] {
+            grid-template-columns: 1fr !important;
+            gap: 15px !important;
+          }
+          .responsive-table table, 
+          .responsive-table thead, 
+          .responsive-table tbody, 
+          .responsive-table th, 
+          .responsive-table td, 
+          .responsive-table tr {
+            display: block !important;
+            width: 100% !important;
+          }
+          .responsive-table thead {
+            display: none !important;
+          }
+          .responsive-table tr {
+            margin-bottom: 20px !important;
+            border: 1px solid rgba(255,255,255,0.06) !important;
+            border-radius: 20px !important;
+            background: rgba(255,255,255,0.01) !important;
+            padding: 20px !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+          }
+          .responsive-table td {
+            border: none !important;
+            padding: 8px 0 !important;
+            border-radius: 0 !important;
+            text-align: left !important;
+          }
+          .responsive-table td:last-child {
+            border-top: 1px solid rgba(255,255,255,0.05) !important;
+            margin-top: 10px !important;
+            padding-top: 15px !important;
+          }
+          .responsive-table td:last-child > div {
+            justify-content: flex-start !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

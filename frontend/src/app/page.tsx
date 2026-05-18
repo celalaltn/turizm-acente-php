@@ -10,6 +10,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { tr, enUS, ru, de, arSA, es } from "date-fns/locale";
 
+import { PUBLIC_API_BASE_URL, BACKEND_BASE_URL } from "@/lib/api";
+import TourDetailModal from "@/components/TourDetailModal";
+
 const LOCALE_MAP: Record<string, any> = { tr, en: enUS, ru, de, ar: arSA, es };
 
 const SLIDER_IMAGES = [
@@ -18,12 +21,24 @@ const SLIDER_IMAGES = [
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop"
 ];
 
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("tr-TR");
+  } catch (e) {
+    return dateStr;
+  }
+};
+
 export default function Home() {
   const { t, lang } = useLanguage();
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [tours, setTours] = useState<any[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [selectedTour, setSelectedTour] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const slideInterval = setInterval(() => {
@@ -35,7 +50,7 @@ export default function Home() {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const response = await fetch(`http://localhost/turizm-acente-php/backend/api/public/tours.php?lang=${lang.toUpperCase()}`);
+        const response = await fetch(`${PUBLIC_API_BASE_URL}/tours.php?lang=${lang.toUpperCase()}`);
         const result = await response.json();
         if (result.status === "success") {
           setTours(result.data);
@@ -149,39 +164,82 @@ export default function Home() {
           <p style={{ color: '#64748b', fontSize: 'var(--section-subtitle-size, 1.2rem)' }}>En çok tercih edilen rüya gibi tatil rotaları.</p>
         </div>
 
-        <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(var(--grid-col-min-medium, 350px), 1fr))', gap: '30px' }}>
+        <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '30px' }}>
           {tours.map((tour: any, idx: number) => (
-            <div key={tour.id} className={`tour-card reveal reveal-up delay-${(idx % 3) + 1}`} style={{ background: '#fff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
+            <div 
+              key={tour.id} 
+              className={`tour-card reveal reveal-up delay-${(idx % 3) + 1}`} 
+              onClick={() => window.location.href = `/turlar/detay?id=${tour.id}`}
+              style={{ 
+                background: '#fff', 
+                borderRadius: '24px', 
+                overflow: 'hidden', 
+                boxShadow: '0 10px 30px rgba(0,0,0,0.05)', 
+                border: '1px solid #f1f5f9',
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.05)';
+              }}
+            >
               <div 
                 className="tour-image" 
                 style={{
                   height: '280px',
                   backgroundImage: tour.images && tour.images.length > 0 
-                    ? `url(http://localhost/turizm-acente-php/backend/${tour.images[0]})` 
+                    ? `url(${BACKEND_BASE_URL}/${tour.images[0]})` 
                     : 'url(https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=1000&auto=format&fit=crop)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative'
                 }}
-              >
-                <div style={{ position: 'absolute', top: '20px', right: '20px', background: 'white', padding: '8px 15px', borderRadius: '50px', fontWeight: '800', color: 'var(--primary-color)', fontSize: '1.1rem', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}>
-                  {tour.price} ₺
-                </div>
-              </div>
+              />
               <div className="tour-info" style={{ padding: '30px' }}>
                 <div style={{ display: 'flex', gap: '5px', marginBottom: '10px' }}>
                   {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="#ff9900" color="#ff9900" />)}
                 </div>
                 <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '15px' }}>{tour.title}</h3>
-                <p style={{ color: '#64748b', marginBottom: '25px', display: '-webkit-box', WebkitLineClamp: '3', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                
+                {/* Tour Date Range */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '0.9rem', marginBottom: '15px' }}>
+                  <Calendar size={16} color="var(--primary-color)" />
+                  <span style={{ fontWeight: '600' }}>
+                    {formatDate(tour.start_date)} - {formatDate(tour.end_date)}
+                  </span>
+                </div>
+
+                <p style={{ 
+                  color: '#64748b', 
+                  marginBottom: '25px', 
+                  display: '-webkit-box', 
+                  WebkitLineClamp: '3', 
+                  WebkitBoxOrient: 'vertical', 
+                  overflow: 'hidden',
+                  minHeight: '65px',
+                  lineHeight: '1.5'
+                }}>
                   {tour.description}
                 </p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '0.9rem' }}>
-                    <Users size={16} />
-                    <span>{tour.quota} Kişi</span>
-                  </div>
-                  <button className="btn" style={{ padding: '10px 20px', fontSize: '0.9rem' }}>
+                  {tour.quota && parseInt(tour.quota) > 0 ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '0.9rem' }}>
+                      <Users size={16} />
+                      <span>{tour.quota} Kişi</span>
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  <button 
+                    className="btn" 
+                    onClick={() => window.location.href = `/turlar/detay?id=${tour.id}`}
+                    style={{ padding: '10px 20px', fontSize: '0.9rem' }}
+                  >
                     {t("tours.detail")} <ArrowRight size={16} style={{ marginLeft: '5px' }} />
                   </button>
                 </div>

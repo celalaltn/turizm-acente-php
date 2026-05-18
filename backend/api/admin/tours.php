@@ -15,11 +15,37 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 try {
     if ($method === 'GET') {
-        // Turları listele (Admin görünümü)
-        $stmt = $pdo->query("SELECT * FROM tours ORDER BY created_at DESC");
-        $tours = $stmt->fetchAll();
-        
-        echo json_encode(['status' => 'success', 'data' => $tours]);
+        $tourId = $_GET['id'] ?? null;
+        if ($tourId) {
+            // Fetch single tour with default translations and ALL its images (including IDs)
+            $stmt = $pdo->prepare("SELECT t.*, tt.title, tt.description, tt.special_conditions 
+                                   FROM tours t 
+                                   LEFT JOIN tour_translations tt ON t.id = tt.tour_id AND tt.lang_code = 'TR'
+                                   WHERE t.id = ?");
+            $stmt->execute([$tourId]);
+            $tour = $stmt->fetch();
+            
+            if ($tour) {
+                // Fetch images with IDs!
+                $stmtImg = $pdo->prepare("SELECT id, image_path FROM tour_images WHERE tour_id = ? ORDER BY sort_order ASC");
+                $stmtImg->execute([$tourId]);
+                $tour['images'] = $stmtImg->fetchAll();
+                
+                echo json_encode(['status' => 'success', 'data' => $tour]);
+            } else {
+                http_response_code(404);
+                echo json_encode(['status' => 'error', 'message' => 'Tour not found']);
+            }
+        } else {
+            // Turları listele (Admin görünümü) ile varsayılan TR başlığını da birleştirerek getiriyoruz
+            $stmt = $pdo->query("SELECT t.*, tt.title 
+                                 FROM tours t 
+                                 LEFT JOIN tour_translations tt ON t.id = tt.tour_id AND tt.lang_code = 'TR'
+                                 ORDER BY t.created_at DESC");
+            $tours = $stmt->fetchAll();
+            
+            echo json_encode(['status' => 'success', 'data' => $tours]);
+        }
     } 
     elseif ($method === 'POST') {
         // Yeni tur ekle
@@ -67,6 +93,20 @@ try {
 
         $stmt = $pdo->prepare("UPDATE tours SET price=?, quota=?, start_date=?, end_date=?, is_active=? WHERE id=?");
         $stmt->execute([$price, $quota, $start_date, $end_date, $is_active, $tourId]);
+
+        // Çeviriyi de güncelle (ON DUPLICATE KEY UPDATE)
+        if (!empty($input['title'])) {
+            $langCode = $input['lang_code'] ?? 'TR';
+            $title = $input['title'];
+            $desc = $input['description'] ?? '';
+            $conditions = $input['special_conditions'] ?? '';
+            
+            $sqlTrans = "INSERT INTO tour_translations (tour_id, lang_code, title, description, special_conditions) 
+                         VALUES (?, ?, ?, ?, ?) 
+                         ON DUPLICATE KEY UPDATE title=VALUES(title), description=VALUES(description), special_conditions=VALUES(special_conditions)";
+            $stmtTrans = $pdo->prepare($sqlTrans);
+            $stmtTrans->execute([$tourId, $langCode, $title, $desc, $conditions]);
+        }
 
         echo json_encode(['status' => 'success', 'message' => 'Tur güncellendi']);
     }

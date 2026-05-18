@@ -21,8 +21,21 @@ export default function AdminLayout({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      // On mobile, default to closed, on desktop default to open
+      setIsSidebarOpen(!mobile);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
@@ -31,6 +44,12 @@ export default function AdminLayout({
     }
     setLoading(false);
   }, [pathname, router]);
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [pathname, isMobile]);
 
   const handleLogout = () => {
     localStorage.removeItem("admin_token");
@@ -58,19 +77,39 @@ export default function AdminLayout({
       fontFamily: "'Inter', sans-serif",
       color: 'white'
     }}>
+      {/* Mobile Sidebar Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          onClick={() => setIsSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 90
+          }}
+        />
+      )}
+
       {/* Sidebar */}
       <aside style={{
-        width: isSidebarOpen ? '280px' : '80px',
+        width: isSidebarOpen ? '280px' : (isMobile ? '0px' : '80px'),
         backgroundColor: 'rgba(255,255,255,0.02)',
         borderRight: '1px solid rgba(255,255,255,0.05)',
         backdropFilter: 'blur(10px)',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        display: 'flex',
+        display: isMobile && !isSidebarOpen ? 'none' : 'flex',
         flexDirection: 'column',
-        position: 'sticky',
+        position: isMobile ? 'fixed' : 'sticky',
+        left: 0,
         top: 0,
         height: '100vh',
-        zIndex: 50,
+        transform: isMobile ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
+        boxShadow: isMobile && isSidebarOpen ? '10px 0 30px rgba(0,0,0,0.5)' : 'none',
+        zIndex: 100,
         padding: '30px 15px'
       }}>
         <div style={{ 
@@ -85,7 +124,7 @@ export default function AdminLayout({
             alt="Logo" 
             style={{ width: '45px', height: '45px', objectFit: 'contain', background: 'white', borderRadius: '10px', padding: '5px' }} 
           />
-          {isSidebarOpen && (
+          {(isSidebarOpen || isMobile) && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontSize: '1rem', fontWeight: '900', color: 'white', letterSpacing: '0.5px' }}>ASR HOLIDAY</span>
               <span style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: '600' }}>ADMIN PANEL</span>
@@ -112,9 +151,9 @@ export default function AdminLayout({
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                     <span style={{ color: pathname === item.path ? '#3b82f6' : 'inherit' }}>{item.icon}</span>
-                    {isSidebarOpen && <span style={{ fontWeight: pathname === item.path ? '600' : '400' }}>{item.name}</span>}
+                    {(isSidebarOpen || isMobile) && <span style={{ fontWeight: pathname === item.path ? '600' : '400' }}>{item.name}</span>}
                   </div>
-                  {isSidebarOpen && pathname === item.path && <ChevronRight size={16} style={{ marginLeft: 'auto' }} />}
+                  {(isSidebarOpen || isMobile) && pathname === item.path && <ChevronRight size={16} style={{ marginLeft: 'auto' }} />}
                 </Link>
               </li>
             ))}
@@ -139,7 +178,7 @@ export default function AdminLayout({
             }}
           >
             <LogOut size={20} />
-            {isSidebarOpen && <span style={{ fontWeight: '600' }}>Çıkış Yap</span>}
+            {(isSidebarOpen || isMobile) && <span style={{ fontWeight: '600' }}>Çıkış Yap</span>}
           </button>
         </div>
       </aside>
@@ -154,7 +193,7 @@ export default function AdminLayout({
         {/* Header */}
         <header style={{ 
           height: '80px',
-          padding: '0 40px', 
+          padding: isMobile ? '0 20px' : '0 40px', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
@@ -200,7 +239,7 @@ export default function AdminLayout({
         </header>
         
         {/* Children Container */}
-        <div style={{ padding: '40px', flex: 1 }}>
+        <div style={{ padding: isMobile ? '20px 15px' : '40px', flex: 1 }}>
           {children}
         </div>
       </main>
