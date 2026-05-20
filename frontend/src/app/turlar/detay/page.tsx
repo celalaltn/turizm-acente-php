@@ -190,6 +190,27 @@ function TourDetailContent() {
             gap: 12px;
           }
         }
+
+        @media (max-width: 600px) {
+          .detail-container {
+            padding: 16px 12px;
+          }
+          .detail-title {
+            font-size: 1.6rem;
+            letter-spacing: -0.2px;
+          }
+          .detail-slider {
+            height: 240px;
+            border-radius: 16px;
+          }
+          .detail-left-column > div,
+          .detail-sidebar > div {
+            border-radius: 18px !important;
+          }
+          .detail-sidebar {
+            gap: 18px;
+          }
+        }
       `}</style>
 
       <Header />

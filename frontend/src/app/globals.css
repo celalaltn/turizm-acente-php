@@ -52,6 +52,64 @@ ul { list-style: none; }
   padding: 0 25px;
 }
 
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --hero-title-size: 2.4rem;
+    --hero-subtitle-size: 1.05rem;
+    --hero-height: 70vh;
+    --search-container-padding: 10px;
+    --search-container-radius: 18px;
+    --search-input-min-width: 100%;
+    --search-button-width: 100%;
+    --section-padding: 70px 18px;
+    --section-title-size: 2.1rem;
+    --box-padding: 16px;
+  }
+
+  .header {
+    padding: 14px 0;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .tours-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  .tour-card {
+    border-radius: 18px;
+  }
+
+  .tour-image {
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --hero-title-size: 2rem;
+    --hero-subtitle-size: 0.95rem;
+    --hero-height: 65vh;
+    --search-container-radius: 16px;
+    --section-padding: 60px 14px;
+    --section-title-size: 1.9rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
 /* Buttons */
 .btn {
   display: inline-flex;
