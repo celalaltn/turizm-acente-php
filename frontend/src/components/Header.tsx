@@ -163,7 +163,6 @@ export default function Header() {
             className="mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
-              display: 'none',
               background: 'none',
               border: 'none',
               cursor: 'pointer',

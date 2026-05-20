@@ -54,6 +54,7 @@ export default function TourDetailModal({ isOpen, onClose, tour }: TourDetailMod
 
   return (
     <div 
+      className="tour-modal"
       style={{
         position: "fixed",
         top: 0,
@@ -71,6 +72,7 @@ export default function TourDetailModal({ isOpen, onClose, tour }: TourDetailMod
       onClick={onClose}
     >
       <div 
+        className="tour-modal-panel"
         style={{
           backgroundColor: "#ffffff",
           width: "100%",
@@ -117,10 +119,10 @@ export default function TourDetailModal({ isOpen, onClose, tour }: TourDetailMod
         <div style={{ overflowY: "auto", display: "flex", flexDirection: "column" }}>
           
           {/* Main Layout Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", width: "100%" }}>
+          <div className="tour-modal-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", width: "100%" }}>
             
             {/* Left Column: Image Gallery */}
-            <div style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            <div className="tour-modal-media" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "15px" }}>
               <div 
                 style={{
                   width: "100%",
@@ -160,7 +162,7 @@ export default function TourDetailModal({ isOpen, onClose, tour }: TourDetailMod
             </div>
 
             {/* Right Column: Tour Details */}
-            <div style={{ padding: "40px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div className="tour-modal-content" style={{ padding: "40px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div>
                 {/* Rating & Badge */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "15px" }}>
@@ -190,7 +192,7 @@ export default function TourDetailModal({ isOpen, onClose, tour }: TourDetailMod
                 </h2>
 
                 {/* Info Pills Grid */}
-                <div style={{ 
+                <div className="tour-modal-info-grid" style={{ 
                   display: "grid", 
                   gridTemplateColumns: "1fr 1fr", 
                   gap: "15px", 
@@ -316,6 +318,27 @@ export default function TourDetailModal({ isOpen, onClose, tour }: TourDetailMod
           to {
             opacity: 1;
             transform: scale(1) translateY(0);
+          }
+        }
+      `}</style>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .tour-modal {
+            padding: 12px !important;
+          }
+          .tour-modal-panel {
+            border-radius: 20px !important;
+            max-height: 95vh !important;
+          }
+          .tour-modal-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .tour-modal-media,
+          .tour-modal-content {
+            padding: 20px !important;
+          }
+          .tour-modal-info-grid {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>

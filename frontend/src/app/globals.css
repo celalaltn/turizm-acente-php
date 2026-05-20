@@ -20,6 +20,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  min-width: 0;
 }
 
 html, body {
@@ -31,6 +32,17 @@ html, body {
   overflow-x: hidden;
   max-width: 100%;
   width: 100%;
+}
+
+#__next {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
 }
 
 /* RTL Support */
@@ -169,6 +181,14 @@ ul { list-style: none; }
   display: flex;
   gap: 2.5rem;
   font-weight: 600;
+}
+
+.desktop-nav {
+  display: flex;
+}
+
+.mobile-toggle {
+  display: none;
 }
 
 .nav-links a {
@@ -578,11 +598,33 @@ ul { list-style: none; }
     --grid-col-min-medium: 1fr;
     --grid-col-min-small: 1fr;
     --box-padding: 20px;
+    --section-padding-large: 90px 0 60px;
+    --grid-col-min-large: 100%;
+    --grid-col-min-medium: 100%;
+    --grid-col-min-small: 100%;
+    --card-margin-negative: 0px;
     --box-padding-medium: 20px;
     --card-margin-negative: -20px;
     --hero-height: 80vh;
     --logo-height: 32px;
     --search-input-min-width: 100%;
+
+  .header-content {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: inline-flex !important;
+  }
+
+  .nav-links {
+    gap: 1.2rem;
+  }
     --search-button-width: 100%;
     --search-container-padding: 20px;
     --search-container-radius: 18px;

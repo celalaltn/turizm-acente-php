@@ -102,13 +102,25 @@ export default function About() {
       </section>
 
       <Footer />
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .experience-badge {
+            position: static !important;
+            margin-top: 16px;
+          }
+          .value-card {
+            padding: 24px !important;
+            border-radius: 22px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
 function ValueCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
   return (
-    <div style={{ 
+    <div className="value-card" style={{ 
       background: 'white', 
       padding: '40px', 
       borderRadius: '30px', 

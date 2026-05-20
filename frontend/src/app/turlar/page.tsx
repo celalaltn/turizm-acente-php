@@ -117,7 +117,7 @@ function ToursListContent() {
             <div className="loader">Yükleniyor...</div>
           </div>
         ) : (
-          <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '30px' }}>
+          <div className="tours-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(var(--grid-col-min-large, 350px), 1fr))', gap: '30px' }}>
             {tours.length > 0 ? (
               tours.map((tour) => (
                 <div 

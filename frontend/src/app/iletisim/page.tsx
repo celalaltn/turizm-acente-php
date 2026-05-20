@@ -166,6 +166,19 @@ export default function Contact() {
           transform: scale(1.05);
           filter: brightness(1.1);
         }
+
+        @media (max-width: 768px) {
+          .contact-card {
+            padding: 24px;
+            border-radius: 20px;
+          }
+          .icon-wrapper {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+          }
+        }
       `}</style>
     </div>
   );

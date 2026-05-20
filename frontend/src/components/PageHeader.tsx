@@ -33,7 +33,7 @@ export default function PageHeader({
         </h1>
         
         {/* Breadcrumb */}
-        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '0.95rem', fontWeight: '600' }}>
+        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '0.95rem', fontWeight: '600', flexWrap: 'wrap', rowGap: '8px' }}>
           <Link href="/" style={{ color: 'rgba(255,255,255,0.7)', transition: '0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'white'} onMouseOut={e => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}>Anasayfa</Link>
           <ChevronRight size={16} style={{ opacity: 0.5 }} />
           {breadcrumb.map((item, idx) => (
