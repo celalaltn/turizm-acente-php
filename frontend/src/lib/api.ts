@@ -1,6 +1,20 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/backend/api/admin";
-export const PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_PUBLIC_API_URL || API_BASE_URL.replace("/admin", "/public");
-export const BACKEND_BASE_URL = API_BASE_URL.replace("/api/admin", "");
+const getBackendBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const origin = window.location.origin;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost/turizm-acente-php/backend';
+    }
+    return `${origin}/backend`;
+  }
+  return 'http://localhost/turizm-acente-php/backend';
+};
+
+export const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
+  ? process.env.NEXT_PUBLIC_API_URL.replace("/api/admin", "") 
+  : getBackendBaseUrl();
+
+export const API_BASE_URL = `${BACKEND_BASE_URL}/api/admin`;
+export const PUBLIC_API_BASE_URL = `${BACKEND_BASE_URL}/api/public`;
 
 export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;

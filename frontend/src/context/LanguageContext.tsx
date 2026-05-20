@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { API_BASE_URL, PUBLIC_API_BASE_URL } from "@/lib/api";
 
 type Language = "tr" | "en" | "ru" | "de" | "ar" | "es";
 
@@ -196,8 +197,8 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     const fetchInitialData = async () => {
       try {
         const [langRes, settingsRes] = await Promise.all([
-          fetch("http://localhost/turizm-acente-php/backend/api/admin/languages.php"),
-          fetch("http://localhost/turizm-acente-php/backend/api/public/settings.php")
+          fetch(`${API_BASE_URL}/languages.php`),
+          fetch(`${PUBLIC_API_BASE_URL}/settings.php`)
         ]);
 
         const langData = await langRes.json();
@@ -237,7 +238,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
 
     try {
-      const response = await fetch(`http://localhost/turizm-acente-php/backend/api/public/translations.php?lang=${newLang.toUpperCase()}`);
+      const response = await fetch(`${PUBLIC_API_BASE_URL}/translations.php?lang=${newLang.toUpperCase()}`);
       const result = await response.json();
       if (result.status === "success" && result.data && Object.keys(result.data).length > 0) {
         setTranslations(result.data);

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Send, User, Mail, Phone, MessageSquare } from "lucide-react";
+import { PUBLIC_API_BASE_URL } from "@/lib/api";
 
 export default function ContactForm({ showInfoSide = true }: { showInfoSide?: boolean }) {
   const { t } = useLanguage();
@@ -18,7 +19,7 @@ export default function ContactForm({ showInfoSide = true }: { showInfoSide?: bo
     e.preventDefault();
     setStatus("loading");
     try {
-      const response = await fetch("http://localhost/turizm-acente-php/backend/api/public/contact.php", {
+      const response = await fetch(`${PUBLIC_API_BASE_URL}/contact.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)

@@ -1,9 +1,17 @@
 <?php
 $host = 'localhost';
-$db   = 'turizm_db';
-$user = 'root';
-$pass = '';
+
+if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === 'localhost' || str_starts_with($_SERVER['HTTP_HOST'], 'localhost:'))) {
+    $db   = 'turizm_db';
+    $user = 'root';
+    $pass = '';
+} else {
+    $db   = 'karanahsap_asr-turizm';
+    $user = 'karanahsap_asr-turizm';
+    $pass = 'Antalya07..';
+}
 $charset = 'utf8mb4';
+
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
