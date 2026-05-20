@@ -1,17 +1,31 @@
-const getBackendBaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    const origin = window.location.origin;
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      return 'http://localhost/turizm-acente-php/backend';
-    }
-    return `${origin}/backend`;
+const normalizeBaseUrl = (value: string) => value.replace(/\/$/, "");
+
+const resolveBackendBaseUrl = () => {
+  const envBackend = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+  if (envBackend) {
+    return normalizeBaseUrl(envBackend);
   }
-  return 'http://localhost/turizm-acente-php/backend';
+
+  const envApiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envApiUrl) {
+    return normalizeBaseUrl(
+      envApiUrl.replace(/\/(api\/admin|api\/public)\/?$/, "")
+    );
+  }
+
+  if (typeof window !== "undefined") {
+    const isLocalhost =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
+    return isLocalhost
+      ? "http://localhost/turizm-acente-php/backend"
+      : "https://api-asr.altexwebagency.com.tr";
+  }
+
+  return "http://localhost/turizm-acente-php/backend";
 };
 
-export const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
-  ? process.env.NEXT_PUBLIC_API_URL.replace("/api/admin", "") 
-  : getBackendBaseUrl();
+export const BACKEND_BASE_URL = resolveBackendBaseUrl();
 
 export const API_BASE_URL = `${BACKEND_BASE_URL}/api/admin`;
 export const PUBLIC_API_BASE_URL = `${BACKEND_BASE_URL}/api/public`;
