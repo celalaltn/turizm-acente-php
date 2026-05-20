@@ -15,6 +15,13 @@ const copyIfMissing = (sourcePath, targetPath) => {
   fs.copyFileSync(sourcePath, targetPath);
 };
 
+const copyWithPrefixes = (sourcePath, targetDir, baseName) => {
+  const doubleUnderscore = `__next.${baseName}.txt`;
+  const singleUnderscore = `_next.${baseName}.txt`;
+  copyIfMissing(sourcePath, path.join(targetDir, doubleUnderscore));
+  copyIfMissing(sourcePath, path.join(targetDir, singleUnderscore));
+};
+
 const walk = (dir, onEntry) => {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   entries.forEach((entry) => {
@@ -62,9 +69,8 @@ walk(outDir, (fullPath, entry) => {
         return;
       }
 
-      const targetName = `_next.${rootName}.${parts.join(".")}.txt`;
-      const targetPath = path.join(parentDir, targetName);
-      copyIfMissing(nestedPath, targetPath);
+      const targetBase = `${rootName}.${parts.join(".")}`;
+      copyWithPrefixes(nestedPath, parentDir, targetBase);
     });
   }
 });

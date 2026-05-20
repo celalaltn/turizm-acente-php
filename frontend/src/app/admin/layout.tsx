@@ -43,6 +43,7 @@ export default function AdminLayout({
     const token = localStorage.getItem("admin_token");
     if (!token && !isLoginRoute) {
       router.push("/admin/login");
+      return;
     }
     setLoading(false);
   }, [isLoginRoute, pathname, router]);
