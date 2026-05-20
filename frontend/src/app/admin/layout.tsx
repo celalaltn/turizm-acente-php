@@ -23,8 +23,9 @@ export default function AdminLayout({
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
+  const resolvedPathname = typeof window !== "undefined" ? window.location.pathname : pathname;
+  const isLoginRoute = resolvedPathname.includes("/admin/login");
   const router = useRouter();
-  const isLoginRoute = pathname.startsWith("/admin/login");
 
   useEffect(() => {
     const handleResize = () => {
