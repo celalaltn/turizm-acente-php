@@ -24,6 +24,7 @@ export default function AdminLayout({
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const isLoginRoute = pathname.startsWith("/admin/login");
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,11 +40,11 @@ export default function AdminLayout({
 
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
-    if (!token && pathname !== "/admin/login") {
+    if (!token && !isLoginRoute) {
       router.push("/admin/login");
     }
     setLoading(false);
-  }, [pathname, router]);
+  }, [isLoginRoute, pathname, router]);
 
   useEffect(() => {
     if (isMobile) {
@@ -65,7 +66,7 @@ export default function AdminLayout({
 
   if (loading) return null;
 
-  if (pathname === "/admin/login") {
+  if (isLoginRoute) {
     return <>{children}</>;
   }
 

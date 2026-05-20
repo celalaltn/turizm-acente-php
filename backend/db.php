@@ -1,7 +1,14 @@
 <?php
 $host = 'localhost';
 
-if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === 'localhost' || str_starts_with($_SERVER['HTTP_HOST'], 'localhost:'))) {
+if (isset($_SERVER['HTTP_HOST'])) {
+    $hostHeader = $_SERVER['HTTP_HOST'];
+    $isLocalHost = $hostHeader === 'localhost' || strncmp($hostHeader, 'localhost:', 10) === 0;
+} else {
+    $isLocalHost = false;
+}
+
+if ($isLocalHost) {
     $db   = 'turizm_db';
     $user = 'root';
     $pass = '';
