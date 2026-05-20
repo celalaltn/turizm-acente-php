@@ -7,7 +7,7 @@ if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === 'localhost' || st
     $pass = '';
 } else {
     $db   = 'karanahsap_asr-turizm';
-    $user = 'karanahsap_asr-turizm';
+    $user = 'karanahsap_asr-user';
     $pass = 'Antalya07..';
 }
 $charset = 'utf8mb4';

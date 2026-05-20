@@ -1,83 +1,122 @@
 -- Veritabanını oluşturun
-CREATE DATABASE IF NOT EXISTS `turizm_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `turizm_db`;
 
--- Ayarlar tablosu
-CREATE TABLE IF NOT EXISTS `settings` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `key` varchar(50) NOT NULL,
-  `value` text,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Başlangıç ayarları
-INSERT INTO `settings` (`key`, `value`) VALUES
-('contact_phone', '0538 497 61 07'),
-('contact_whatsapp', '905384976107'),
-('contact_email', 'info@asrholiday.com'),
-('contact_address', 'Antalya, Türkiye'),
-('site_logo', '');
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+03:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 -- Diller tablosu
 CREATE TABLE IF NOT EXISTS `languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(5) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `is_rtl` tinyint(1) DEFAULT 0,
-  `is_active` tinyint(1) DEFAULT 1,
+  `code` varchar(10) NOT NULL COMMENT 'Dil kodu (Örn: TR, EN, AR)',
+  `name` varchar(50) NOT NULL COMMENT 'Dil adı (Örn: Türkçe, English)',
+  `is_rtl` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 ise Sağdan Sola (Arapça vb.)',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1 ise sitede aktif',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Varsayılan diller
 INSERT INTO `languages` (`code`, `name`, `is_rtl`, `is_active`) VALUES
 ('TR', 'Türkçe', 0, 1),
 ('EN', 'English', 0, 1),
-('RU', 'Russian', 0, 1),
-('DE', 'German', 0, 1),
-('AR', 'Arabic', 1, 1),
-('ES', 'Spanish', 0, 1);
+('RU', 'Русский', 0, 1),
+('DE', 'Deutsch', 0, 1),
+('AR', 'العربية', 1, 1),
+('ES', 'Español', 0, 1);
+
+-- Ayarlar tablosu
+CREATE TABLE IF NOT EXISTS `settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `setting_key` varchar(100) NOT NULL,
+  `setting_value` text DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `setting_key` (`setting_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Başlangıç ayarları
+INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
+('contact_phone', '+90 555 123 4567'),
+('contact_whatsapp', '+90 555 123 4567'),
+('contact_email', 'info@turizmacenta.com'),
+('contact_address', 'Antalya, Türkiye'),
+('admin_email', 'admin@turizmacenta.com');
 
 -- Çeviriler tablosu
 CREATE TABLE IF NOT EXISTS `translations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `lang_code` varchar(5) NOT NULL,
-  `key` varchar(100) NOT NULL,
-  `value` text,
+  `lang_code` varchar(10) NOT NULL,
+  `translation_key` varchar(100) NOT NULL COMMENT 'Örn: nav.home',
+  `translation_value` text NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `lang_key` (`lang_code`,`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  UNIQUE KEY `lang_key_unique` (`lang_code`, `translation_key`),
+  KEY `lang_code` (`lang_code`),
+  CONSTRAINT `fk_trans_lang` FOREIGN KEY (`lang_code`) REFERENCES `languages` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Turlar tablosu
 CREATE TABLE IF NOT EXISTS `tours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `price` decimal(10,2) DEFAULT 0.00,
-  `quota` int(11) DEFAULT 0,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `quota` int(11) NOT NULL DEFAULT 0 COMMENT 'Tur Kontenjanı',
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `start_date` (`start_date`),
+  KEY `end_date` (`end_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Tur Çevirileri tablosu
 CREATE TABLE IF NOT EXISTS `tour_translations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tour_id` int(11) NOT NULL,
-  `lang_code` varchar(5) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
+  `lang_code` varchar(10) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `special_conditions` text DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `tour_id` (`tour_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  UNIQUE KEY `tour_lang_unique` (`tour_id`, `lang_code`),
+  KEY `lang_code` (`lang_code`),
+  CONSTRAINT `fk_tt_tour` FOREIGN KEY (`tour_id`) REFERENCES `tours` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_tt_lang` FOREIGN KEY (`lang_code`) REFERENCES `languages` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Tur Resimleri tablosu
 CREATE TABLE IF NOT EXISTS `tour_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tour_id` int(11) NOT NULL,
-  `image_path` varchar(255) NOT NULL,
-  `is_main` tinyint(1) DEFAULT 0,
+  `image_path` varchar(255) NOT NULL COMMENT 'Sunucudaki dosya yolu',
+  `sort_order` tinyint(2) NOT NULL DEFAULT 0 COMMENT 'Görsellerin sıralaması (0-8)',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `tour_id` (`tour_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  KEY `tour_id` (`tour_id`),
+  CONSTRAINT `fk_image_tour` FOREIGN KEY (`tour_id`) REFERENCES `tours` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- İletişim mesajları tablosu
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `status` enum('new','read','replied') DEFAULT 'new',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
